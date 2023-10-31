@@ -1,0 +1,15 @@
+@import "@styles/vars";
+.nav {
+}
+
+.link {
+  font-size: 18px;
+  &.active {
+    color: $blue-600;
+  }
+}
+
+.list {
+  display: flex;
+  gap: 24px;
+}
