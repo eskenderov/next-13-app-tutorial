@@ -23,7 +23,9 @@ export const SignUpForm = () => {
       submitError: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().required("This field is required"),
+      username: Yup.string()
+        .max(50, "Username must be no more than 50 characters")
+        .required("This field is required"),
       email: Yup.string()
         .email("Invalid email address")
         .required("This field is required"),
