@@ -1,3 +1,4 @@
+import { LoginForm } from "@/components/Form/LoginForm";
 import { Box, Heading, Text } from "@chakra-ui/react";
 
 const SignInPage = () => {
@@ -16,7 +17,10 @@ const SignInPage = () => {
         margin: "20px auto",
       }}
     >
-      <Heading as="h3">Login</Heading>
+      <Heading as="h3" mb="28px">
+        Login
+      </Heading>
+      <LoginForm />
     </Box>
   );
 };

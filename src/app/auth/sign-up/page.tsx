@@ -1,6 +1,7 @@
+import { SignUpForm } from "@comps/Form/SignUpForm";
 import { Box, Heading } from "@chakra-ui/react";
 
-const SignInPage = () => {
+const SignUpPage = () => {
   return (
     <Box
       sx={{
@@ -16,9 +17,12 @@ const SignInPage = () => {
         margin: "20px auto",
       }}
     >
-      <Heading as="h3">Sign up</Heading>
+      <Heading as="h3" mb="28px">
+        Sign up
+      </Heading>
+      <SignUpForm />
     </Box>
   );
 };
 
-export default SignInPage;
+export default SignUpPage;
