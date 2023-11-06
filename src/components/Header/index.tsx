@@ -4,8 +4,9 @@ import Logo from "@/assets/images/logo.svg";
 import Link from "next/link";
 import { HeaderNavigation } from "./ui/Navigation";
 import { HeaderAction } from "./ui/Action";
+import { HeaderAccount } from "./ui/Account";
 
-export const Header = () => {
+export async function Header() {
   return (
     <header className={s.header}>
       <div className="container">
@@ -14,9 +15,11 @@ export const Header = () => {
             <Image src={Logo} alt="logo" width={70} height={70} />
           </Link>
           <HeaderNavigation />
-          <HeaderAction />
+          <HeaderAction>
+            <HeaderAccount />
+          </HeaderAction>
         </div>
       </div>
     </header>
   );
-};
+}

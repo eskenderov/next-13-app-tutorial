@@ -10,10 +10,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 
 export const LoginForm = () => {
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -31,11 +34,24 @@ export const LoginForm = () => {
     }),
     validateOnChange: true,
     onSubmit: async (values, helpers) => {
+      const { email, password } = values;
       helpers.setFieldValue("loading", true);
       try {
+        const res = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+        console.log(res);
+
+        if (res?.ok) {
+          router.refresh();
+          router.back();
+        } else {
+          // #toast
+        }
         helpers.setFieldValue("submitError", "");
       } catch (error: any) {
-        // console.log(JSON.stringify(error));
         helpers.setStatus({ success: false });
         helpers.setFieldValue(
           "submitError",

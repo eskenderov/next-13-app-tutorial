@@ -11,14 +11,16 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 
 export const SignUpForm = () => {
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
-      username: "",
+      email: "tom@mail.ru",
+      password: "123456",
+      username: "tom",
       loading: false,
       submitError: "",
     },
@@ -37,14 +39,34 @@ export const SignUpForm = () => {
     onSubmit: async (values, helpers) => {
       helpers.setFieldValue("loading", true);
       try {
-        helpers.setFieldValue("submitError", "");
+        const { username, email, password } = values;
+        const res = await fetch("/api/user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username,
+            email,
+            password,
+          }),
+        });
+        // console.log("onSubmit", res);
+        if (res.ok) {
+          helpers.setFieldValue("submitError", "");
+          helpers.setFieldValue("email", "");
+          helpers.setFieldValue("password", "");
+          helpers.setFieldValue("username", "");
+          router.push("/auth/sign-in");
+        } else {
+          const response = await res.json();
+          let fetchError: any = new Error("Create User Error");
+          fetchError.name = "ApiUserError";
+          fetchError.status = res.status;
+          fetchError.message = response.message;
+          throw fetchError;
+        }
       } catch (error: any) {
-        // console.log(JSON.stringify(error));
         helpers.setStatus({ success: false });
-        helpers.setFieldValue(
-          "submitError",
-          error.response?.data?.detail || error.message
-        );
+        helpers.setFieldValue("submitError", error.message);
         helpers.setSubmitting(false);
       } finally {
         helpers.setFieldValue("loading", false);

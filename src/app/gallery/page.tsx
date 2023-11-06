@@ -1,7 +1,6 @@
 import s from "./page.module.scss";
 import { GalleryCard } from "./ui/gallery-card";
 import { PhotoType } from "./ui/gallery-card/types";
-
 const API_KEY = process.env.NEXT_PUBLIC_PEXELS_API_KEY;
 
 async function getImages() {
@@ -9,7 +8,7 @@ async function getImages() {
     "https://api.pexels.com/v1/curated?page=1&per_page=100",
     {
       headers: {
-        Authorization: String(API_KEY),
+        Authorization: API_KEY!,
       },
     }
   );

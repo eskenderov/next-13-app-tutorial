@@ -10,6 +10,7 @@ export const HeaderNavigation = () => {
   const data: NavListType = [
     { title: "Home", to: "/" },
     { title: "Gallery", to: "/gallery" },
+    { title: "Profile", to: "/profile" },
   ];
 
   return (
