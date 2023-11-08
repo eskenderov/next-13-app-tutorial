@@ -1,0 +1,48 @@
+name: Deploy-ubuntu
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Docker Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Check Out Repo
+        uses: actions/checkout@v3
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          envkey_NEXTAUTH_URL: "https://195.58.50.118"
+          envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          file_name: .env.local
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build frontend
+        id: docker_build_frontend
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: arsen0001/next-13-app:latest
+
+      - name: deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: 195.58.50.118
+          username: root
+          key: ${{ secrets.SERVER_SSH_PRYVATE_KEY }}
+          script: cd ~/prod/next-13-app-tutorial/ && docker run -d -p 3000:3000 next-13-app
