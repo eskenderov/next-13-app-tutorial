@@ -1,3 +1,53 @@
 $blue-50: #ebf8ff;
 $blue-600: #2b6cb0;
 $blue-700: #2c5282;
+
+$mediaUltra: 1440px;
+$mediaMax: 1360px;
+$mediaLarge: 1280px;
+$mediaBig: 1140px;
+$mediaDesktop: 960px;
+$mediaTablet: 768px;
+$mediaPhablet: 600px;
+$mediaSmart: 480px;
+$mediaPhone: 380px;
+
+@mixin display-less($media) {
+  @if $media == ultra {
+    @media screen and (max-width: $mediaUltra) {
+      @content;
+    }
+  } @else if $media == max {
+    @media screen and (max-width: $mediaMax) {
+      @content;
+    }
+  } @else if $media == large {
+    @media screen and (max-width: $mediaLarge) {
+      @content;
+    }
+  } @else if $media == big {
+    @media screen and (max-width: $mediaBig) {
+      @content;
+    }
+  } @else if $media == desktop {
+    @media screen and (max-width: $mediaDesktop) {
+      @content;
+    }
+  } @else if $media == tablet {
+    @media screen and (max-width: $mediaTablet) {
+      @content;
+    }
+  } @else if $media == phablet {
+    @media screen and (max-width: $mediaPhablet) {
+      @content;
+    }
+  } @else if $media == smart {
+    @media screen and (max-width: $mediaSmart) {
+      @content;
+    }
+  } @else if $media == phone {
+    @media screen and (max-width: $mediaPhone) {
+      @content;
+    }
+  }
+}
