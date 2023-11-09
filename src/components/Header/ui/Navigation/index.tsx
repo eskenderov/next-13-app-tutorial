@@ -9,7 +9,7 @@ export const HeaderNavigation = () => {
   const pathName = usePathname();
   const data: NavListType = [
     { title: "Home", to: "/" },
-    { title: "Gallery", to: "/gallery" },
+    { title: "Shop", to: "/shop" },
     { title: "Profile", to: "/profile" },
   ];
 

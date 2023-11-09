@@ -9,6 +9,12 @@ const nextConfig = {
         port: "",
         pathname: "/photos/**",
       },
+      {
+        protocol: "https",
+        hostname: "cs1.livemaster.ru",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
