@@ -19,3 +19,19 @@ model User {
   createdAt DateTime @default(now()) @db.Timestamp(6)
 }
 
+model Category {
+  id Int @id @default(autoincrement())
+  title String @unique @db.VarChar(255)
+  products Product[]
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+  title String @unique @db.VarChar(120)
+  description String @db.VarChar(255)
+  category Category?  @relation(fields: [CategoryId], references: [id])
+  CategoryId Int?
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime  @updatedAt
+}
+
