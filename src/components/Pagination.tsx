@@ -1,7 +1,32 @@
 import { Box, Button } from "@chakra-ui/react";
 import React from "react";
 
-export const Pagination = () => {
+interface PaginationProps {
+  count: number;
+  activePage: number;
+  onPageChange: (value: number) => void;
+}
+export const Pagination = ({
+  count,
+  onPageChange,
+  activePage,
+}: PaginationProps) => {
+  const paginationButtons = [];
+
+  for (let page = 1; page <= count; page++) {
+    paginationButtons.push(
+      <Button
+        key={page}
+        variant={activePage + 1 === page ? "solid" : "outline"}
+        colorScheme={activePage + 1 === page ? "blue" : "gray"}
+        borderRadius={0}
+        onClick={() => onPageChange(page - 1)}
+      >
+        {page}
+      </Button>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -13,30 +38,7 @@ export const Pagination = () => {
       }}
     >
       <Box display="flex" justifyContent="center" mt={4}>
-        <Button
-          variant={"solid"}
-          colorScheme={"blue"}
-          borderRadius={0}
-          // onClick={() => onPageChange(number)}
-        >
-          1
-        </Button>
-        <Button
-          variant={"outline"}
-          colorScheme={"gray"}
-          borderRadius={0}
-          // onClick={() => onPageChange(number)}
-        >
-          2
-        </Button>
-        {/* <Button
-          key={1}
-          variant={1 === 1 ? "solid" : "outline"}
-          colorScheme={1 === 1 ? "teal" : "gray"}
-          // onClick={() => onPageChange(number)}
-        >
-          1
-        </Button> */}
+        {paginationButtons}
       </Box>
     </Box>
   );

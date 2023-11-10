@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("NEXT_DATABASE_URL")
 }
 
 model User {
@@ -29,9 +29,12 @@ model Category {
 model Product {
   id Int @id @default(autoincrement())
   title String @unique @db.VarChar(120)
-  description String @db.VarChar(255)
+  image String
+  description String @db.VarChar(455)
   category Category?  @relation(fields: [CategoryId], references: [id])
   CategoryId Int?
+  price Int?
+  count Int @default(0)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime  @updatedAt
 }
