@@ -12,7 +12,7 @@ export interface ProductType {
   image: string;
   description: string;
   category?: Category; // Объект типа Category или undefined
-  CategoryId?: number; // ID категории или undefined
+  categoryTab?: string; // ID категории или undefined
   price?: number | null; // Цена может быть числом, но также может быть null
   count: number;
   createdAt: Date;

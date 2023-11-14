@@ -31,8 +31,10 @@ model Product {
   title String @unique @db.VarChar(120)
   image String
   description String @db.VarChar(455)
-  category Category?  @relation(fields: [CategoryId], references: [id])
-  CategoryId Int?
+
+  CategoryTab Category? @relation(fields: [categoryTab], references: [tab]) 
+  categoryTab String?
+
   price Int?
   count Int @default(0)
   createdAt DateTime @default(now()) @db.Timestamp(6)

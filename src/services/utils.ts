@@ -18,3 +18,7 @@ export const toBase64 = (str: string) =>
     : window.btoa(str);
 
 export const objectNotEmpty = (object: any) => !!Object.keys(object).length;
+
+export const truncateText = (text: string, maxLength: number) => {
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+};

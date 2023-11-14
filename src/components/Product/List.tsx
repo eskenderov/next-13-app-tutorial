@@ -8,6 +8,7 @@ interface ProductListProps {
   isLoading: boolean;
 }
 export const ProductList = ({ items, isLoading }: ProductListProps) => {
+  
   return (
     <Grid templateColumns="repeat(4, 1fr)" gap={6}>
       {isLoading && (

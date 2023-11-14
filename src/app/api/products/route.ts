@@ -8,7 +8,9 @@ export async function GET(req: NextRequest) {
     const page = searchParams.get("page");
     const limit = searchParams.get("limit");
     const order = searchParams.get("order");
+    const categoryQuery = searchParams.get("category");
 
+    console.log("categoryQuery", categoryQuery);
     let filters = {};
     const pagination = {};
     const orderOptions = ["createdAt", "price", "-createdAt", "-price"];
@@ -19,7 +21,7 @@ export async function GET(req: NextRequest) {
       orderBy[cleanedOrder] = isDesc ? "desc" : "asc";
     }
 
-    // check filters
+    // check title
     if (searchQuery) {
       filters = {
         ...filters,
@@ -30,6 +32,15 @@ export async function GET(req: NextRequest) {
       };
     }
 
+    // check category tab
+    if (categoryQuery) {
+      filters = {
+        ...filters,
+        categoryTab: categoryQuery,
+      };
+    }
+
+    console.log("filters", filters);
     const products = await db.product.findMany({
       where: filters,
       skip: Number(page) || 0,

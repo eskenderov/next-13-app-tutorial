@@ -1,7 +1,7 @@
 import React from "react";
-import { ListItem, Text, UnorderedList } from "@chakra-ui/react";
-import Link from "next/link";
+import { Text, UnorderedList } from "@chakra-ui/react";
 import { CategoryType } from "@/types/product";
+import { CategoriesList } from "@comps/CategoriesList";
 
 async function getCategories() {
   try {
@@ -25,13 +25,7 @@ export const ShopSitebar = async () => {
       <Text fontSize="2xl" mb={4}>
         Категории
       </Text>
-      {categories?.map(({ id, title, tab }) => (
-        <Link key={id} href={`/shop?category=${tab}`}>
-          <ListItem>
-            <Text fontSize="lg">{title}</Text>
-          </ListItem>
-        </Link>
-      ))}
+      <CategoriesList items={categories} />
     </UnorderedList>
   );
 };

@@ -1,4 +1,5 @@
 "use client";
+import { objectNotEmpty } from "@/services/utils";
 import { ProductType } from "@/types/product";
 import { Box, Flex, Spacer } from "@chakra-ui/react";
 import { Pagination } from "@comps/Pagination";
@@ -8,7 +9,13 @@ import { SearchField } from "@comps/SearchField";
 import { Sorting } from "@comps/Sorting";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
+import {
+  ReadonlyURLSearchParams,
+  redirect,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useState } from "react";
 
 interface ExtendedURLSearchParams extends ReadonlyURLSearchParams {
@@ -16,6 +23,7 @@ interface ExtendedURLSearchParams extends ReadonlyURLSearchParams {
   category?: string;
   limit?: number;
   page?: number;
+  order?: string;
 }
 interface DataResponseType {
   items: ProductType[];
@@ -34,29 +42,66 @@ export const ShopContent = () => {
   const limitParam = params?.get("limit");
   const orderParam = params?.get("order");
   const categoryParam = params?.get("category");
-
   const [search, setSearch] = useState(searchParam || "");
   const [page, setPage] = useState(Number(pageParam) || 0);
   const [limit, setLimit] = useState(Number(limitParam) || 3);
   const [order, setOrder] = useState(orderParam || "-createdAt");
 
+  const router = useRouter();
+  const pathname = usePathname();
+
   const { data, isLoading } = useQuery({
-    queryKey: ["categories", search, limit, page, order],
+    queryKey: ["categories", search, limit, page, order, categoryParam],
     queryFn: async () => {
-      // cюда добавить filterOptions ...
-      const res = await axios.get(
-        `/api/products?q=${search}&page=${page}&limit=${limit}&order=${order}`
-      );
+      let queryParams = "";
+      const queryObject: any = {};
+
+      if (search) queryObject.q = search;
+      if (page) queryObject.page = page + 1;
+      if (limit) queryObject.limit = limit;
+      if (order) queryObject.order = order;
+      if (categoryParam) queryObject.category = categoryParam;
+
+      if (objectNotEmpty(queryObject)) {
+        queryParams += "?" + new URLSearchParams(queryObject).toString();
+      }
+      const res = await axios.get(`/api/products/${queryParams}`);
+
+      router.push(`${pathname}/${queryParams}`);
+
       return res.data;
     },
   });
+
+  const handleChange = (
+    value: any,
+    tab: "page" | "limit" | "search" | "order"
+  ) => {
+    if (tab === "page") setPage(value);
+    else if (tab === "limit") {
+      setLimit(value);
+      setPage(0);
+    } else if (tab === "search") {
+      setSearch(value);
+      setPage(0);
+    } else if (tab === "order") setOrder(value);
+  };
   return (
     <Box sx={{ p: 6 }}>
       <Flex sx={{ mb: 7 }}>
-        <SearchField value={search} onChange={setSearch} />
+        <SearchField
+          value={search}
+          onChange={(value) => handleChange(value, "search")}
+        />
         <Spacer />
-        <RowPerPage value={limit} onChange={setLimit} />
-        <Sorting value={order} onChange={setOrder} />
+        <RowPerPage
+          value={limit}
+          onChange={(value) => handleChange(value, "limit")}
+        />
+        <Sorting
+          value={order}
+          onChange={(value) => handleChange(value, "order")}
+        />
       </Flex>
 
       <ProductList items={data?.items} isLoading={isLoading} />
@@ -64,7 +109,7 @@ export const ShopContent = () => {
         <Pagination
           count={data?.pagination?.countPage}
           activePage={page}
-          onPageChange={setPage}
+          onPageChange={(value) => handleChange(value, "page")}
         />
       )}
     </Box>
