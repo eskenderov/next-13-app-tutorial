@@ -6,7 +6,7 @@ import { GuardText } from "@/components/GuardText";
 const ProfilePage = async () => {
   const session = await getServerSession(authConfig);
   if (!session?.user) {
-    return <GuardText />;
+    return <GuardText pageName="profile" />;
   }
   return (
     <main className="page">
