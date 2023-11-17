@@ -49,7 +49,6 @@ export const SignUpForm = () => {
             password,
           }),
         });
-        // console.log("onSubmit", res);
         if (res.ok) {
           helpers.setFieldValue("submitError", "");
           helpers.setFieldValue("email", "");

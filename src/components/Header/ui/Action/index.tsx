@@ -1,5 +1,5 @@
 import { authConfig } from "@/app/api/auth/[...nextauth]/options";
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import React from "react";
@@ -13,7 +13,9 @@ export async function HeaderAction({
   return (
     <div>
       {session?.user ? (
-        <>{children}</>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 5 }}>
+          {children}
+        </Box>
       ) : (
         <Link href="/auth/sign-in">
           <Button variant="outline">Sign in</Button>

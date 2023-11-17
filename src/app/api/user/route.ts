@@ -53,6 +53,12 @@ export async function POST(req: Request) {
       },
     });
 
+    const newCart = await db.cart.create({
+      data: {
+        userId: newUser.id,
+      },
+    });
+
     const { password: newUserPassword, ...rest } = newUser;
     return NextResponse.json(
       {

@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
     const order = searchParams.get("order");
     const categoryQuery = searchParams.get("category");
 
-    console.log("categoryQuery", categoryQuery);
     let filters = {};
     const pagination = {};
     const orderOptions = ["createdAt", "price", "-createdAt", "-price"];
@@ -40,7 +39,6 @@ export async function GET(req: NextRequest) {
       };
     }
 
-    console.log("filters", filters);
     const products = await db.product.findMany({
       where: filters,
       skip: Number(page) || 0,

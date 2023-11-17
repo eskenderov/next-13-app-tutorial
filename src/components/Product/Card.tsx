@@ -1,3 +1,4 @@
+"use client";
 import { ProductType } from "@/types/product";
 import {
   Badge,
@@ -17,21 +18,53 @@ import { ProductBadge } from "./ProductBadge";
 import { truncateText } from "@/services/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { selectCartProductsIds } from "@/redux-toolkit/features/cartSlice";
 
 interface ProductCardProps {
   data: ProductType;
 }
 
 export const ProductCard = ({ data }: ProductCardProps) => {
+  const productsIds = useSelector(selectCartProductsIds);
   const truncatedText = truncateText(data?.description, 60);
-  const session = useSession();
+  const session: any = useSession();
   const router = useRouter();
   const blockingAddToCard = session?.status === "unauthenticated";
-  const handleAddClick = () => {
+  const queryClient = useQueryClient();
+
+  const mutationAdd = useMutation({
+    mutationFn: (data: { productId: number }) => {
+      return axios.post("/api/cart/", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
+
+  const mutationRemove = useMutation({
+    mutationFn: (data: { productId: number }) => {
+      return axios.request({
+        method: "DELETE",
+        url: `/api/cart`,
+        data: { productId: data?.productId },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
+
+  const handleAddClick = ({ productId }: { productId: number }) => {
     if (blockingAddToCard) {
       router.push("/auth/sign-in");
+    } else {
+      mutationAdd.mutate({ productId });
     }
   };
+
   return (
     <Card maxW="sm" height={580}>
       <CardBody>
@@ -50,9 +83,33 @@ export const ProductCard = ({ data }: ProductCardProps) => {
       <Divider />
       <CardFooter>
         <ButtonGroup spacing="2">
-          <Button variant="solid" colorScheme="blue" onClick={handleAddClick}>
-            Add to cart
-          </Button>
+          {productsIds.includes(data.id) ? (
+            <Button
+              isLoading={mutationRemove.isPending}
+              variant="solid"
+              colorScheme="red"
+              onClick={() =>
+                mutationRemove.mutate({
+                  productId: data?.id,
+                })
+              }
+            >
+              Удалить из корзины
+            </Button>
+          ) : (
+            <Button
+              isLoading={mutationAdd.isPending}
+              variant="solid"
+              colorScheme="blue"
+              onClick={() =>
+                handleAddClick({
+                  productId: data?.id,
+                })
+              }
+            >
+              Add to cart
+            </Button>
+          )}
         </ButtonGroup>
       </CardFooter>
     </Card>

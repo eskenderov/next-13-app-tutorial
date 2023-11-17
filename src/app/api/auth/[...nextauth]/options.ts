@@ -24,6 +24,7 @@ export const authConfig: AuthOptions = {
       return {
         ...session,
         user: {
+          id: token?.id,
           email: token?.email,
           username: token?.username,
           bio: token?.bio,

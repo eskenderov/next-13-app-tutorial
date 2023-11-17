@@ -17,6 +17,7 @@ model User {
   password String
   bio String?
   createdAt DateTime @default(now()) @db.Timestamp(6)
+  cartId Cart?
 }
 
 model Category {
@@ -31,13 +32,28 @@ model Product {
   title String @unique @db.VarChar(120)
   image String
   description String @db.VarChar(455)
-
   CategoryTab Category? @relation(fields: [categoryTab], references: [tab]) 
-  categoryTab String?
-
+  categoryTab String
   price Int?
   count Int @default(0)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime  @updatedAt
+  cartItems CartItem[]
 }
 
+model CartItem {
+  id Int @id @default(autoincrement())
+  quantity Int @default(0)
+  cart Cart  @relation(fields: [cartId], references: [id])
+  cartId Int
+  product Product @relation(fields: [productId], references: [id])
+  productId Int @unique
+}
+
+model Cart {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int @unique
+  totalCoast Int @default(0)
+  items CartItem[]
+}

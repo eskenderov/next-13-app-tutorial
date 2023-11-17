@@ -5,6 +5,7 @@ import Link from "next/link";
 import { HeaderNavigation } from "./ui/Navigation";
 import { HeaderAction } from "./ui/Action";
 import { HeaderAccount } from "./ui/Account";
+import { HeaderCart } from "./ui/Cart";
 
 export async function Header() {
   return (
@@ -16,6 +17,7 @@ export async function Header() {
           </Link>
           <HeaderNavigation />
           <HeaderAction>
+            <HeaderCart />
             <HeaderAccount />
           </HeaderAction>
         </div>
