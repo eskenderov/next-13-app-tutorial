@@ -27,8 +27,13 @@ export async function GET() {
         cartId: cart.id,
       },
       select: {
+        id: true,
         product: true,
         quantity: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
@@ -128,7 +133,6 @@ export async function DELETE(req: Request) {
     const body = await req.json();
     const { productId } = cartShema.parse(body);
 
-    console.log(productId);
     await db.cartItem.delete({
       where: {
         productId: productId,
@@ -136,6 +140,56 @@ export async function DELETE(req: Request) {
     });
     return NextResponse.json(
       { message: "Successfully removed from the basket" },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    const errorMessage = error?.issues[0]?.message || "Something went wrong";
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
+}
+
+const cartPatchShema = z.object({
+  itemId: z.number().min(1, "itemId is required"),
+  quantity: z.number().min(1, "quantity is required"),
+});
+export async function PATCH(req: Request) {
+  try {
+    const session = await getServerSession(authConfig);
+
+    if (!session?.user) {
+      return NextResponse.json({ message: "Unauthorised" }, { status: 401 });
+    }
+
+    const cart = await db.cart.findUnique({
+      where: { userId: Number(session.user.id) },
+    });
+
+    if (!cart) {
+      return NextResponse.json(
+        { message: "Your cart not found" },
+        { status: 400 }
+      );
+    }
+
+    const body = await req.json();
+    const { itemId, quantity } = cartPatchShema.parse(body);
+
+    if (quantity < 1) {
+      return NextResponse.json(
+        { message: "quantity cannot be less than 1" },
+        { status: 403 }
+      );
+    }
+    await db.cartItem.update({
+      where: {
+        id: itemId,
+      },
+      data: {
+        quantity,
+      },
+    });
+    return NextResponse.json(
+      { message: "Successfully updated cart item" },
       { status: 201 }
     );
   } catch (error: any) {

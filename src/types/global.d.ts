@@ -1,8 +1,15 @@
 import { Product } from "@prisma/client";
 
 interface CartType {
-  items: Product[];
+  items: CartProduct[];
   totalPrice: number;
   totalCount: number;
   productsIds: number[];
+}
+
+
+interface CartProduct {
+  id: number;
+  product: Product;
+  quantity: number;
 }

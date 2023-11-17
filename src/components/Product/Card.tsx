@@ -66,9 +66,9 @@ export const ProductCard = ({ data }: ProductCardProps) => {
   };
 
   return (
-    <Card maxW="sm" height={580}>
+    <Card maxW="sm" height={600}>
       <CardBody>
-        <Image width={520} height={520} alt={data.title} src={data.image} />
+        <Image width={320} height={320} alt={data.title} src={data.image} />
         <Stack mt="6" spacing="3">
           <Heading size="md">{data.title}</Heading>
           <Text>{truncatedText}</Text>
@@ -93,6 +93,7 @@ export const ProductCard = ({ data }: ProductCardProps) => {
                   productId: data?.id,
                 })
               }
+              size="sm"
             >
               Удалить из корзины
             </Button>
@@ -106,6 +107,7 @@ export const ProductCard = ({ data }: ProductCardProps) => {
                   productId: data?.id,
                 })
               }
+              size="sm"
             >
               Add to cart
             </Button>
